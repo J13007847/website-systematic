@@ -1,34 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import { useRoutes } from "react-router-dom";
+import { cloneDeep } from "lodash-es";
+import { useSelector } from "react-redux";
+import route from "@/router/index";
+import { assembleRoute } from "@/utils/routerUtils";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+  const [allRoute, setAllRoute] = useState(route);
+  const { routes } = useSelector((state: any) => state.login);
+  const elements = useRoutes(allRoute);
+  useEffect(() => {
+    if (routes && routes.length) {
+      const newR = assembleRoute(cloneDeep(routes));
+      const newAll = cloneDeep(allRoute);
+      newAll[newAll.length - 1].children =
+        newAll[newAll.length - 1].children?.concat(newR);
+      setAllRoute(newAll);
+    }
+  }, [routes]);
+  return <div className="height-all">{elements}</div>;
 }
 
-export default App
+export default App;
