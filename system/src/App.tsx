@@ -4,7 +4,6 @@ import { cloneDeep } from "lodash-es";
 import { useSelector } from "react-redux";
 import route from "@/router/index";
 import { assembleRoute } from "@/utils/routerUtils";
-
 function App() {
   const [allRoute, setAllRoute] = useState(route);
   const { routes } = useSelector((state: any) => state.login);
@@ -15,6 +14,8 @@ function App() {
       const newAll = cloneDeep(allRoute);
       newAll[newAll.length - 1].children =
         newAll[newAll.length - 1].children?.concat(newR);
+      console.log("newAll", newAll);
+
       setAllRoute(newAll);
     }
   }, [routes]);

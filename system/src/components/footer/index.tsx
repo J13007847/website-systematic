@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Footer() {
-  return <div>Footer</div>;
+  return <h4>react+antd 后台管理系统</h4>;
 }

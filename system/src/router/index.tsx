@@ -10,7 +10,7 @@ interface Router {
 const routes: Array<Router> = [
   ...staticRoute,
   {
-    path: "/main",
+    path: "/",
     element: <AuthRoutes>{lazyLoad("layOut", "components")}</AuthRoutes>,
     children: [
       {

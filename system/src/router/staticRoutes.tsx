@@ -1,7 +1,7 @@
 import { lazyLoad } from "@/utils/routerUtils";
 const router = [
   {
-    path: "/",
+    path: "/login",
     element: lazyLoad("login"),
   },
   {

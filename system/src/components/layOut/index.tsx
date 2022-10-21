@@ -1,19 +1,32 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../header/inxex";
+import { Layout } from "antd";
+import HeaderCom from "../header/inxex";
 import Menu from "../menu";
-import Footer from "../footer";
+import FooterCom from "../footer";
+import "./index.less";
+const { Header, Footer, Sider, Content } = Layout;
 export default function index() {
   return (
-    <div>
-      <Header></Header>
-      <div className="container">
-        <Menu></Menu>
-        <div className="content-container">
+    <Layout>
+      <Header style={{ backgroundColor: "#fff" }}>
+        <HeaderCom></HeaderCom>
+      </Header>
+      <Layout>
+        <Sider theme="light" style={{ marginRight: "4px" }}>
+          <Menu></Menu>
+        </Sider>
+        <Content
+          style={{
+            height: "calc(100vh - 140px)",
+          }}
+        >
           <Outlet></Outlet>
-        </div>
-      </div>
-      <Footer></Footer>
-    </div>
+        </Content>
+      </Layout>
+      <Footer>
+        <FooterCom></FooterCom>
+      </Footer>
+    </Layout>
   );
 }
