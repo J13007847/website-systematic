@@ -4,28 +4,15 @@ import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import { assembleMenu } from "@/utils/routerUtils";
+import { staticMenu } from "./menuList";
 export default function SliderMenu() {
   const navigator = useNavigate();
-  const [menuItem, setMenuItem] = useState([
-    {
-      label: "首页",
-      key: "main",
-      name: "/main",
-      path: "/main",
-    },
-  ]);
+  const [menuItem, setMenuItem] = useState(staticMenu);
   const [activeKey, setDefaultKey] = useState(["main"]);
   const { routes } = useSelector((state: any) => state.login);
 
   useEffect(() => {
-    let mainA = [
-      {
-        label: "首页",
-        key: "main",
-        name: "/main",
-        path: "/main",
-      },
-    ];
+    let mainA = staticMenu;
     let newMenu: any = assembleMenu(routes);
     setMenuItem(mainA.concat(newMenu));
   }, [routes]);
@@ -34,12 +21,8 @@ export default function SliderMenu() {
     let path = "";
 
     for (let i = keyPath.length - 1; i >= 0; i--) {
-      console.log(i);
-
-      path += "/" + keyPath[i];
+      path += "/" + (keyPath[i] !== "main" ? keyPath[i] : "");
     }
-    console.log(path);
-
     navigator(path);
   };
   return (

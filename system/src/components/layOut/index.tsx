@@ -18,7 +18,8 @@ export default function index() {
         </Sider>
         <Content
           style={{
-            height: "calc(100vh - 140px)",
+            height: "calc(100vh - 148px)",
+            marginTop: "4px",
           }}
         >
           <Outlet></Outlet>

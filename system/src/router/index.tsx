@@ -4,7 +4,7 @@ interface Router {
   name?: string;
   path: string;
   children?: Array<Router>;
-  element: any;
+  element?: any;
 }
 
 const routes: Array<Router> = [
@@ -16,6 +16,23 @@ const routes: Array<Router> = [
       {
         path: "",
         element: lazyLoad("main", "pages"),
+      },
+      {
+        path: "resume",
+        children: [
+          {
+            path: "",
+            element: lazyLoad("resume"),
+          },
+          {
+            path: "company",
+            element: lazyLoad("company"),
+          },
+          {
+            path: "project",
+            element: lazyLoad("project"),
+          },
+        ],
       },
     ],
   },

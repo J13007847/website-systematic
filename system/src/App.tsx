@@ -4,6 +4,7 @@ import { cloneDeep } from "lodash-es";
 import { useSelector } from "react-redux";
 import route from "@/router/index";
 import { assembleRoute } from "@/utils/routerUtils";
+import "./App.less";
 function App() {
   const [allRoute, setAllRoute] = useState(route);
   const { routes } = useSelector((state: any) => state.login);
