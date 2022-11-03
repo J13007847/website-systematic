@@ -17,7 +17,7 @@ export const staticMenu = [{
       path: "/",
       type:1,
     },{
-      label: "过往公司",
+      label: "工作经历",
       key: "company",
       name: "/company",
       path: "/company",

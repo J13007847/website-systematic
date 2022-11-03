@@ -1,16 +1,10 @@
 import { useImperativeHandle, useState } from "react";
-import { Modal, Form, Input, DatePicker, Button } from "antd";
-import type { RangePickerProps } from "antd/es/date-picker";
+import { Modal, Form, Input, Button } from "antd";
 import moment from "moment";
-
-const { RangePicker } = DatePicker;
-interface FieldData {
-  name: string | number | (string | number)[];
-  value?: any;
-  touched?: boolean;
-  validating?: boolean;
-  errors?: string[];
-}
+import AddTags from "@/components/addTags";
+type indexType = {
+  [index: string]: string | string[];
+};
 export default function AddCompany({
   toRef,
   csAddTable,
@@ -21,11 +15,14 @@ export default function AddCompany({
   const [modalShow, setModalShow] = useState(false);
   const [editId, setEditId] = useState("");
   const [formRef] = Form.useForm();
+  const typeVal = Form.useWatch("type", formRef);
+  const scienceVal = Form.useWatch("science", formRef);
   const formItemLayout = {
     form: formRef,
     initialValues: {
       name: "",
-      time: [null, moment(new Date())] as any,
+      type: [],
+      science: [],
     },
     labelCol: { span: 4 },
     wrapperCol: { span: 20 },
@@ -45,20 +42,21 @@ export default function AddCompany({
     setModalShow(!modalShow);
   };
   const submitHandle = (value: any) => {
-    const { time, name } = value;
-
     const params = {
       id: editId,
-      name: name,
-      startTime: moment(time[0]).format("YYYY-MM"),
-      endTime: moment(time[1]).format("YYYY-MM"),
+      ...value,
     };
 
     csAddTable(params);
     modalShowHandle();
   };
-  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
-    return current && current > moment().endOf("day");
+  const tagChange = (data: any, type: string, name: string) => {
+    let nameData: any = formRef.getFieldValue(name);
+    let list = type === "index" ? [...nameData] : [...data];
+    if (type === "index") {
+      list.splice(data, 1);
+    }
+    formRef.setFieldValue(name, list);
   };
   useImperativeHandle(toRef, () => {
     return {
@@ -76,21 +74,34 @@ export default function AddCompany({
         <Form {...formItemLayout} onFinish={submitHandle}>
           <Form.Item
             name="name"
-            label="公司名称："
-            rules={[{ required: true, message: "请输入用户名" }]}
+            label="项目名称："
+            rules={[{ required: true, message: "请输入项目名称" }]}
           >
-            <Input type="text" placeholder="请输入公司名称"></Input>
+            <Input type="text" placeholder="请输入项目名称"></Input>
           </Form.Item>
           <Form.Item
-            name="time"
-            label="在职时间："
-            rules={[{ required: true }]}
+            name="type"
+            label="项目类型："
+            rules={[{ required: true, message: "请输入项目类型" }]}
           >
-            <RangePicker
-              picker="month"
-              format="YYYY-MM"
-              disabledDate={disabledDate}
-            />
+            <AddTags
+              tagList={typeVal || []}
+              tagChange={(data: any, type: string) =>
+                tagChange(data, type, "type")
+              }
+            ></AddTags>
+          </Form.Item>
+          <Form.Item
+            name="science"
+            label="所用技术："
+            rules={[{ required: true, message: "请输入所用技术" }]}
+          >
+            <AddTags
+              tagList={scienceVal || []}
+              tagChange={(data: any, type: string) =>
+                tagChange(data, type, "science")
+              }
+            ></AddTags>
           </Form.Item>
           <div className="tr mt2">
             <Button onClick={modalShowHandle} style={{ marginRight: "10px" }}>

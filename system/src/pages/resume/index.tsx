@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Form, Input, Radio, Tag, Button, message, Modal } from "antd";
+import { Form, Input, Radio, Button, Modal } from "antd";
 import PreviewResume from "./components/previewResume";
+import AddTags from "@/components/addTags";
 import "./index.less";
 export default function Resume() {
   const formItemLayout = {
@@ -14,38 +15,26 @@ export default function Resume() {
     desc: "",
     skills: [],
   });
-  const [skillsTxt, setSkillsTxt] = useState("");
-  const [skillsTxtShow, setSkillsTxtShow] = useState(false);
   const [modal, setModal] = useState({
     show: false,
     title: "个人信息的预览",
   });
-  const inputChange = (event: any) => {
-    const { value } = event.target;
-    setSkillsTxt(value);
-  };
   const formValChange = (event: any) => {
     const { value, name } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-  const enterHandle = () => {
-    if (!skillsTxt) return;
-    let oldSkills: any = [...formData.skills];
-    if (oldSkills.includes(skillsTxt)) {
-      message.warning("技能名称重复");
-      return;
-    }
-
-    oldSkills.push(skillsTxt);
-    setFormData((prev) => ({ ...prev, skills: oldSkills }));
-    setSkillsTxtShow(!skillsTxtShow);
-    setSkillsTxt("");
   };
   const submitHandle = (value: any) => {
     setFormData(value);
   };
   const modelShowHandle = () => {
     setModal((prev) => ({ ...prev, show: !modal.show }));
+  };
+  const skillsChange = (data: string[] | number, type: string) => {
+    let tagList: any = type === "row" ? data : [...formData.skills];
+    if (type === "index") {
+      tagList.splice(data, 1);
+    }
+    setFormData((prev: any) => ({ ...prev, skills: tagList }));
   };
   return (
     <div className="resumeIndex mainBox">
@@ -77,40 +66,18 @@ export default function Resume() {
           ></Input.TextArea>
         </Form.Item>
         <Form.Item label="技能标签" name="skills" rules={[{ required: true }]}>
-          {formData.skills.map((item) => (
-            <Tag color="magenta" key={item} style={{ marginBottom: "6px" }}>
-              {item}
-            </Tag>
-          ))}
-
-          {skillsTxtShow && (
-            <Input
-              value={skillsTxt}
-              onChange={inputChange}
-              placeholder="回车/Enter键添加技能(最多20个字)"
-              maxLength={20}
-              onPressEnter={enterHandle}
-              allowClear
-              style={{ width: "260px", margin: "0 4px" }}
-            ></Input>
-          )}
+          <AddTags tagList={formData.skills} tagChange={skillsChange}></AddTags>
+        </Form.Item>
+        <div className="tc mt2">
           <Button
             type="primary"
-            onClick={() => setSkillsTxtShow(!skillsTxtShow)}
+            htmlType="submit"
+            style={{ marginRight: "20px" }}
           >
-            {skillsTxtShow ? "取消" : "添加"}
+            保存
           </Button>
-        </Form.Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          style={{ marginRight: "20px" }}
-        >
-          保存
-        </Button>
-        <Button type="text" onClick={modelShowHandle}>
-          预览
-        </Button>
+          <Button onClick={modelShowHandle}>预览</Button>
+        </div>
       </Form>
       <Modal title={modal.title} open={modal.show} onCancel={modelShowHandle}>
         <PreviewResume></PreviewResume>
